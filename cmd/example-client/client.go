@@ -47,10 +47,10 @@ func main() {
 			Email: "your@email",
 		},
 		Players: []*proto_api.Player{
-			&proto_api.Player{Caption: "Player", PlayerType: proto_api.PlayerType_CLIENT},
-			&proto_api.Player{Caption: "robot1", PlayerType: proto_api.PlayerType_ROBOT_EFFECTIVE},
-			&proto_api.Player{Caption: "robot2", PlayerType: proto_api.PlayerType_ROBOT_TSUMOGIRI},
-			&proto_api.Player{Caption: "robot3", PlayerType: proto_api.PlayerType_ROBOT_EFFECTIVE},
+			{Caption: "Player", PlayerType: proto_api.PlayerType_CLIENT},
+			{Caption: "robot1", PlayerType: proto_api.PlayerType_ROBOT_EFFECTIVE},
+			{Caption: "robot2", PlayerType: proto_api.PlayerType_ROBOT_TSUMOGIRI},
+			{Caption: "robot3", PlayerType: proto_api.PlayerType_ROBOT_EFFECTIVE},
 		},
 		Timeouts: nil,
 	}
