@@ -1,0 +1,171 @@
+syntax = "proto3";
+package rules;
+
+import "google/protobuf/duration.proto";
+
+import "base/base.proto";
+import "base/yaku.proto";
+
+option go_package = "github.com/dnovikoff/mahjong-api/genproto/rules";
+
+enum KanDoraOpen {
+    KANDORA_OPEN_UNSPECEFIED = 0;
+    // No kan dora open in JPML-A
+    DONT_OPEN = 1;
+    // Instant dora open in EMA
+    INSTANT = 2;
+    // Afer next kan call or drop (for opened kans)
+    AFTER_ACTION = 3;
+}
+
+message Yaku {
+    bool open_tanyao = 1;
+    // Does rinshan combine with haitei
+    bool haitei_from_live_only = 2;
+    bool ura = 3;
+    // No ipatsu in JPML-A
+    bool ipatsu = 4;
+    base.Instances aka_dora = 5;
+    base.Limit renhou = 6;
+    // No tsumo 2 fu for rinshan in jpmla
+    bool rinshan_fu = 7;
+    // Green required for ryuuiisou yakuman in jpmla
+    bool green_required = 8;
+}
+
+message Scoring {
+    // 7700 rounds to 8000
+    bool mangan_round = 1;
+    bool kazoe_yakuman = 2;
+    bool yakuman_sum = 3;
+    // The default should be 100, but could differ in some rules (eg. 500)
+    int64 honba_money = 4;
+
+    repeated base.Yakuman double_yakumans = 5;
+}
+
+message Draw {
+	bool winds = 1;
+    bool kokushi = 2;
+	bool kans = 3;
+	bool riichi = 4;
+	bool ron3 = 5;
+}
+
+message Pao {
+    bool winds = 1;
+    bool dragons = 2;
+    bool kans = 3;
+    bool rinshan = 4;
+}
+
+// Complex uma (binta) is used in JPML-A.
+// Still classic uma could be described this way with all 3 field equal.
+message ComplexUma {
+    repeated sint64 default_money = 1;
+    repeated sint64 minus1_money = 2;
+    repeated sint64 plus1_money = 3;
+}
+
+enum Atodzuke {
+    ATODZUKE_UNSPECIFIED = 0;
+    ATODZUKE_ALLOWED = 1;
+    // Allowed when all waits gives some yaku.
+    ATODZUKE_FORBIDDEN_SOFT = 2;
+    // Should already have yaku. Eg. syanpon for both yakuhai does not fit.
+    ATODZUKE_FORBIDDEN_STRICT = 3;
+}
+
+enum AgariYame {
+    AGARI_YAME_UNSPECIFIED = 0;
+    // Game ends.
+    IMPLICIT_END = 1;
+    // Game might be continued (player asked). (TODO: Implement)
+    EXPLICIT_CONTINUE = 2;
+    // Game must be continued.
+    IMPLICIT_CONTINUE = 3;
+}
+
+enum Shifting {
+    SHIFTING_UNSPECIFIED = 0;
+    SHIFTING_ALLOWED = 1;
+    // Only shifting alloed. Ex. for 34+5, 2=allowed, 5=forbidden
+    SHIFTING_FORBIDDEN_SOFT = 2;
+    // for 24+5 both 2 and 5 forbidden
+    SHIFTING_FORBIDDEN_STRICT = 3;
+}
+
+message Game {
+    // Dealer could end the game if first in orasu.
+    AgariYame agari_yame = 1;
+    Shifting chi_shift = 2;
+    bool end_by_bancrocity = 3;
+    bool nagashi = 4;
+    bool atamahane = 5;
+    bool honba_payed_to_all = 6;
+    bool riichi_return_on_multiron = 7;
+    // Chi priority if clicked first.
+    bool speed_chi = 8;
+    // Calls displayed, event if waiting for a higher priority choises.
+    bool say_on_click = 9;
+    bool should_have_money_for_riichi = 10;
+    Atodzuke atodzuke = 11;
+	
+    int64 start_money = 12;
+    // At the end of the game, money reduced by start points
+    int64 end_reduce_money = 13;
+    int64 oka_money = 14;
+    // Ex. At least 30000 to end the game.
+    int64 min_win_money = 15;
+    // Ex. West for hanchans, until min_win_money condition fits.
+    base.Wind max_last_wind = 16;
+    // Ex. East for hanchans. Could end here if conditions meets.
+    base.Wind last_wind = 17;
+
+    ComplexUma uma = 18;
+    Draw draw = 19;
+    KanDoraOpen kan_dora_open = 20;
+    // In case of same points, players share uma.
+    bool uma_share = 21;
+    // In case there are riichi sticks
+    bool riichi_sticks_goes_to_first = 22;
+
+    Pao pao = 23;
+    // Possible values: 2,3,4
+    int64 number_of_players = 24;
+    // Not allowed in sanma
+    bool chi_allowed = 25;
+    // User asked if he wants to show noten (not for riichi)
+    bool suggest_notean = 26;
+}
+
+message Ruleset {
+    string id = 1;
+    string description = 2;
+    Scoring scoring = 3;
+    Yaku yaku = 4;
+    Game game = 5;
+}
+
+message Timeouts {
+    // Base time to think on server suggest. Ex. 10 seconds.
+    // Max value: 30 seconds.
+    // Min value: 5 seconds.
+    google.protobuf.Duration base = 1;
+
+    // Additional time to think in this round (if base time passed). Ex. 5 seconds.
+    // Max value: 30 seconds.
+    // Min value: 0. (or nil)
+    google.protobuf.Duration extra = 2;
+
+    // If player makes a decition in base time, than recover time added to extra.
+    // Limited by extra value. Ex. 1 second.
+    // Value: >=0 (or nil)
+    google.protobuf.Duration recover = 3;
+
+    // The game will move very fast in case there are no suggest.
+    // This is a delay after each player action.
+    // Max value: 1 second.
+    // Could be 0 (nil) for robot games.
+    google.protobuf.Duration delay = 4;
+}
