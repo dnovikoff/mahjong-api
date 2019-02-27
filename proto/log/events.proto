@@ -1,0 +1,180 @@
+syntax = "proto3";
+package log;
+
+import "google/protobuf/timestamp.proto";
+
+import "base/base.proto";
+import "base/yaku.proto";
+import "log/common.proto";
+
+option go_package = "github.com/dnovikoff/mahjong-api/genproto/log";
+
+enum Furiten {
+    FURITEN_UNDEFINED = 0;
+    FURITEN_NO = 1;
+    FURITEN_YES = 2;
+}
+
+message Event {
+    // Id to be used to point to some event in the game.
+    int64 event_id = 1;
+    google.protobuf.Timestamp time = 2;
+
+    oneof oneof_events {
+        TakeEvent take = 3;
+        DropEvent drop = 4;
+        ScoreChangesEvent changes = 5;
+        SayEvent say = 6;
+        DeclareEvent declare = 7;
+        WinEvent win = 8;
+        DrawEvent draw = 9;
+        IndicatorEvent indicator = 10;
+        FuritenEvent furiten = 11;
+        PlayerStatusEvent player_status = 12;
+    }
+}
+
+message FuritenEvent {
+    int64 who_index = 1;
+    Furiten furiten = 2;
+}
+
+message TakeEvent {
+    int64 who_index = 1;
+    // Not filled in game, when other player takes a tile.
+    int64 instance = 2;
+    // Is tile taken from a dead wall.
+    bool dead_wall = 3;
+}
+
+message DropEvent {
+    int64 who_index = 1;
+    int64 instance = 2;
+    bool tsumogiri = 3;
+    bool riichi = 4;
+    // Filled only when tempai.
+    // Will be filled only for self, when in game.
+    // Will be filled in logs.
+    // Not filled for other players in game.
+    int64 wait_tiles = 5;
+}
+
+// Score changed by riichi
+message ScoreChangesEvent {
+    // New number of total riichi sticks on table.
+    int64 riichi_count = 1;
+    // New scores for every player.
+    Changes changes = 2;
+}
+
+enum Say {
+    SAY_UNSPECIFIED = 0;
+    RIICHI = 1;
+	RON = 2;
+    TSUMO = 3;
+    // kisekuhai.
+    DRAW = 4;
+    KAN = 5;
+    PON = 6;
+    CHI = 7;
+
+    // Probably will be used later.
+    TEMPAI = 8;
+    NOTEN = 9;
+}
+
+message SayEvent {
+    int64 who_index = 1;
+    Say what = 2;
+}
+
+message DeclareEvent {
+    int64 who_index = 1;
+    base.Meld meld = 2;
+}
+
+message Win {
+    int64 who_index = 1;
+    // Hand with no win tile
+    base.Instances hand = 2;
+    repeated base.Meld declared = 3;
+    base.Limit limit = 4;
+    // Base money played to player.
+    // Does not includes riichi sticks and renchans.
+    // Ex. for Ron 4.30 it will be 7700 and for Tsumo 4.30 it will be 7900
+    // Resulting money could be taken from changes
+    int64 base_money = 5;
+
+    oneof oneof_win_info {
+        YakuInfo yaku = 6;
+        YakumanInfo yakuman = 7;
+    }
+
+    // Changes after current win applied
+    Changes changes = 8;
+}
+
+message YakuInfo {
+    int64 han = 1;
+    int64 fu = 2;
+    repeated base.YakuValue yaku = 3;
+}
+
+message YakumanInfo {
+    repeated base.YakumanValue yakuman = 1;
+}
+
+message WinEvent {
+    // If from == who - this is tsumo
+    int64 from_index = 2;
+    int64 instance = 3;
+    base.Instances dora_indicators = 4;
+    base.Instances ura_indicators = 5;
+
+    // Total changes after all payments applied
+    Changes changes = 6;
+
+    // Ron, Tsumo, Multiron
+    repeated Win wins = 7;
+}
+
+enum DrawReason {
+    DRAW_UNSPECIFIED = 0;
+    // Regular draw.
+    REGULAR = 1;
+    // Special discared at regular draw.
+    NAGASHI = 2;
+    // For winds first drop.
+    WINDS = 3;
+    // 9 different koksuhi tiles from start.
+    KOKUSHI = 4;
+    // 4 riichi declared.
+    RIICHI4 = 5;
+    // Ron from three players at a time.
+    RON3 = 6;
+    // For kans by different players declared.
+    KAN4 = 7;
+}
+
+message DrawEvent {
+    // Visible hands of players.
+    // For kusukuhai and tempai.
+    repeated base.Instances hands = 1;
+    DrawReason reason = 2;
+    Changes changes = 3;
+}
+
+enum PlayerStauts {
+    STATUS_UNDEFINED = 0;
+    OFFLINE = 1;
+    ONLINE = 2;
+}
+
+message PlayerStatusEvent {
+    int64 who_index = 1;
+    PlayerStauts status = 2;
+}
+
+message IndicatorEvent {
+    int64 instance = 1;
+}
