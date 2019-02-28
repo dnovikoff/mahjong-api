@@ -8,4 +8,6 @@ This repository contains protobuf files for mahjong api
 Also includes example client at cmd/examle-client
 
 The server code is not is not public.
-The server for education or research purposes will be distributes as a compiled binary later.
+The server for education or research purposes will be distributes as a compiled binary.
+
+Download server from here https://yadi.sk/d/f2e7KFl6cGe_Lw
