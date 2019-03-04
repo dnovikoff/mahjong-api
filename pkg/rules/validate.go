@@ -7,8 +7,8 @@ import (
 
 	"go.uber.org/multierr"
 
-	base_proto "github.com/dnovikoff/mahjong-api/genproto/base"
-	rules_proto "github.com/dnovikoff/mahjong-api/genproto/rules"
+	proto_base "github.com/dnovikoff/mahjong-api/genproto/public/base"
+	proto_rules "github.com/dnovikoff/mahjong-api/genproto/public/rules"
 )
 
 func validateEnum(value interface{}, possbile map[int32]string) error {
@@ -93,7 +93,7 @@ func validateMoneyReflect(expectedLen int64, val reflect.Value) error {
 	return err
 }
 
-func Validate(rules *rules_proto.Ruleset) error {
+func Validate(rules *proto_rules.Ruleset) error {
 	err := ValidateGame(rules.GetGame())
 	if err != nil {
 		return err
@@ -102,10 +102,10 @@ func Validate(rules *rules_proto.Ruleset) error {
 	if err != nil {
 		return err
 	}
-	return validateEnumImpl(rules.GetYaku().GetRenhou(), base_proto.Limit_name, true)
+	return validateEnumImpl(rules.GetYaku().GetRenhou(), proto_base.Limit_name, true)
 }
 
-func ValidateGame(rules *rules_proto.Game) error {
+func ValidateGame(rules *proto_rules.Game) error {
 	var err error
 	add := func(x error) {
 		if x == nil {
@@ -116,12 +116,12 @@ func ValidateGame(rules *rules_proto.Game) error {
 	addf := func(format string, args ...interface{}) {
 		add(fmt.Errorf(format, args...))
 	}
-	add(validateEnum(rules.GetAgariYame(), rules_proto.AgariYame_name))
-	add(validateEnum(rules.GetChiShift(), rules_proto.Shifting_name))
-	add(validateEnum(rules.GetAtodzuke(), rules_proto.Atodzuke_name))
-	add(validateEnum(rules.GetKanDoraOpen(), rules_proto.KanDoraOpen_name))
-	add(validateEnum(rules.GetLastWind(), base_proto.Wind_name))
-	add(validateEnum(rules.GetMaxLastWind(), base_proto.Wind_name))
+	add(validateEnum(rules.GetAgariYame(), proto_rules.AgariYame_name))
+	add(validateEnum(rules.GetChiShift(), proto_rules.Shifting_name))
+	add(validateEnum(rules.GetAtodzuke(), proto_rules.Atodzuke_name))
+	add(validateEnum(rules.GetKanDoraOpen(), proto_rules.KanDoraOpen_name))
+	add(validateEnum(rules.GetLastWind(), proto_base.Wind_name))
+	add(validateEnum(rules.GetMaxLastWind(), proto_base.Wind_name))
 	num := rules.GetNumberOfPlayers()
 	add(validateMoney(num, rules))
 	switch num {

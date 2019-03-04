@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+package mahjong.game;
+
+import "google/protobuf/duration.proto";
+
+import "public/log/events.proto";
+import "public/log/common.proto";
+import "public/log/log.proto";
+import "public/base/base.proto";
+import "public/game/client.proto";
+
+option go_package = "github.com/dnovikoff/mahjong-api/genproto/public/game";
+
+// Server initiated message
+message Server {
+    // If server message contains suggset, the client is expected
+    // to answer with Client message, with same "suggest_id" set.
+    // The exception is when suggest.canceled = true. With such message
+    // server tells that on of previous messages (selected by suggest_id) is
+    // out of date (ex. by timeout) and the response is no longer expected.
+    Suggest suggest = 1;
+    oneof oneof_events {
+        // Take could contain information about others taken tiles in some training mode
+        log.TakeEvent take = 3;
+        log.DropEvent drop = 4;
+        log.ScoreChangesEvent changes = 5;
+        log.SayEvent say = 6;
+        log.DeclareEvent declare = 7;
+        log.WinEvent win = 8;
+        log.DrawEvent draw = 9;
+        log.IndicatorEvent indicator = 10;
+
+        // Round info could contain information about only one or more hands (some training mode)
+        log.RoundInfo round_start = 11;
+
+        GameStartEvent game_start = 12;
+        GameEndEvent game_end = 13;
+        log.Furiten furiten = 14;
+
+        // Special message, sent by server when reconnected to recover state
+        // Contains previously sent messages with no suggest field.
+        RoundRecover recover = 15;
+        log.PlayerStatusEvent player_status = 16;
+
+        // Setting applied on server side.
+        Settings settings = 17;
+    }
+}
+
+// Send after reconnect
+message RoundRecover {
+    repeated Server events = 1;
+}
+
+// Final screen
+message GameEndEvent {
+    log.Changes changes = 1;
+    log.GameEndReason end_reason = 2;
+}
+
+message GameStartEvent {
+    int64 client_index = 1;
+    log.GameInfo info = 2;
+}
+
+// If your code does not know how to answer on any suggest,
+// you still MUST answer with cancel=true.
+// The exeption is canceled=true event. This events MUST not be answered.
+//
+// When does suggest appear:
+// 1. On game start. Waiting for player to start the round.
+//    Always. Only possible answer is cancel=true.
+// 2. On round end. Waiting for player to read the result.
+//    Always. Possible answer is cancel=true.
+//    The continue_game=true could be set. In this case you might answer with continue_game.
+// 3. On other player drop
+//    Optional. Depending on flags there could be: chi, pon, kan, win.
+//    The cancel=true will lead to skipping event.
+// 4. On self take
+//    Optional(cause of riichi). Depending on flags there could be: 
+//      closed kan, riichi, drop, draw.
+//    cancel=true will lead to tsumogi.
+// 5. On kan upgrade declaration.
+//    Optional win=true.
+// 6. With empty event and noten=true (for optional agari yame)
+// 7. With empty event and canceled=true.
+//      This means the event is canceled (no longer valid). MUST not answer this.
+//      The ID of the event will be equals to one of previously sent.
+
+message Suggest {
+    // Should response with this id
+    int64 suggest_id = 1;
+
+    bool pon = 2;
+    bool kan = 3;
+    
+    int64 closed_kan_mask = 4;
+    base.Instances upgrade_instances = 5;
+    // 1+23
+    bool chi_left = 6;
+    // 2+13
+    bool chi_center = 7;
+    // 3+12
+    bool chi_right = 8;
+
+    int64 drop_mask = 9;
+    int64 riichi_mask = 10;
+
+    bool win = 11;
+    bool draw = 12;
+
+    // Suggested to show noten (could show tempai)
+    // Could be used for some rulesets
+    bool noten = 13;
+
+    // Specific for some rules, where leader could continue game (agari yame).
+    bool continue_game = 14;
+
+    // Time to answer. Should be used to display timer to player.
+    // Client should not take any action if player does not select an answer in given time.
+    // After the timeout server will discard the event.
+    // Server could add additional time on its side to gurantee player will have at least
+    // timeout time.
+    google.protobuf.Duration timeout = 15;
+
+    // Means all suggest are canceled. Must not be answered.
+    bool canceled = 16;
+}

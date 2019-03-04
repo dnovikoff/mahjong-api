@@ -3,11 +3,11 @@ package robots
 import (
 	"github.com/dnovikoff/tempai-core/tile"
 
-	proto_api "github.com/dnovikoff/mahjong-api/genproto/api"
+	proto_game "github.com/dnovikoff/mahjong-api/genproto/public/game"
 	"github.com/dnovikoff/mahjong-api/pkg/convert"
 )
 
-type CallFunc func(*Caller, *proto_api.Server, *proto_api.Client) bool
+type CallFunc func(*Caller, *proto_game.Server, *proto_game.Client) bool
 
 type Caller struct {
 	Tracker
@@ -18,7 +18,7 @@ func NewCaller(s ...CallFunc) *Caller {
 	return &Caller{NewTracker(), s}
 }
 
-func Left(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
+func Left(c *Caller, req *proto_game.Server, res *proto_game.Client) bool {
 	if !req.GetSuggest().GetChiLeft() {
 		return false
 	}
@@ -26,7 +26,7 @@ func Left(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
 	return c.call(res, t+1, t+2)
 }
 
-func Center(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
+func Center(c *Caller, req *proto_game.Server, res *proto_game.Client) bool {
 	if !req.GetSuggest().GetChiCenter() {
 		return false
 	}
@@ -34,7 +34,7 @@ func Center(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
 	return c.call(res, t-1, t+1)
 }
 
-func Right(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
+func Right(c *Caller, req *proto_game.Server, res *proto_game.Client) bool {
 	if !req.GetSuggest().GetChiRight() {
 		return false
 	}
@@ -42,7 +42,7 @@ func Right(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
 	return c.call(res, t-2, t-1)
 }
 
-func Pon(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
+func Pon(c *Caller, req *proto_game.Server, res *proto_game.Client) bool {
 	if !req.GetSuggest().GetPon() {
 		return false
 	}
@@ -50,7 +50,7 @@ func Pon(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
 	return c.call(res, t, t)
 }
 
-func Kan(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
+func Kan(c *Caller, req *proto_game.Server, res *proto_game.Client) bool {
 	if !req.GetSuggest().GetKan() {
 		return false
 	}
@@ -58,11 +58,11 @@ func Kan(c *Caller, req *proto_api.Server, res *proto_api.Client) bool {
 	return c.call(res, t, t, t)
 }
 
-func (c *Caller) tile(req *proto_api.Server) tile.Tile {
+func (c *Caller) tile(req *proto_game.Server) tile.Tile {
 	return convert.Instance(req.GetDrop().GetInstance()).Tile()
 }
 
-func (c *Caller) Request(req *proto_api.Server) *proto_api.Client {
+func (c *Caller) Request(req *proto_game.Server) *proto_game.Client {
 	res := c.Tracker.Request(req)
 	d := req.GetDrop()
 	if d == nil || req.Suggest == nil || c.ClientIndex == d.WhoIndex {
@@ -76,7 +76,7 @@ func (c *Caller) Request(req *proto_api.Server) *proto_api.Client {
 	return res
 }
 
-func (c *Caller) call(res *proto_api.Client, tiles ...tile.Tile) bool {
+func (c *Caller) call(res *proto_game.Client, tiles ...tile.Tile) bool {
 	cp := c.Hand.Clone()
 	var result tile.Instances
 	types := make(map[tile.Type]bool, 4)
@@ -92,7 +92,7 @@ func (c *Caller) call(res *proto_api.Client, tiles ...tile.Tile) bool {
 	if len(types) != 1 {
 		return false
 	}
-	res.OneofClient = &proto_api.Client_Call{
+	res.OneofClient = &proto_game.Client_Call{
 		convert.ProtoInstances(result),
 	}
 	return true

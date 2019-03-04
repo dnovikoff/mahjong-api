@@ -1,0 +1,15 @@
+# example config
+
+network: tcp
+address: ":9091"
+logger-enabled: true
+save-debug: true
+save-json: true
+
+secret: "logs-secret"
+# GetLog does not require secret
+secret-whitelist: ["/mahjong.log.LogService/GetLog"]
+
+# This is where logs will be
+output: ./logdb/
+validate-id-regexp: "^[-/a-z-A-Z0-9]+$"

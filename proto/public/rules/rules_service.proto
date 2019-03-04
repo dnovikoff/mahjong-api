@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package mahjong.rules;
+
+import "public/rules/rules.proto";
+
+option go_package = "github.com/dnovikoff/mahjong-api/genproto/public/rules";
+
+service RulesService {
+    rpc ListRules(ListRulesRequest) returns (ListRulesResponse);
+    rpc GetRule(GetRuleRequest) returns (GetRuleResponse);
+}
+
+message ListRulesRequest {
+}
+
+message GetRuleRequest {
+    string rule_id = 1;
+}
+
+message GetRuleResponse {
+    rules.Ruleset ruleset = 1;
+}
+
+message ListRulesResponse {
+    repeated rules.Ruleset rules = 1;
+}
