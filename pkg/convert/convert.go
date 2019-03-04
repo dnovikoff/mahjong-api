@@ -10,7 +10,7 @@ import (
 	"github.com/dnovikoff/tempai-core/tile"
 	"github.com/dnovikoff/tempai-core/yaku"
 
-	proto_base "github.com/dnovikoff/mahjong-api/genproto/base"
+	proto_base "github.com/dnovikoff/mahjong-api/genproto/public/base"
 )
 
 func ProtoIndex(i int) int64 {

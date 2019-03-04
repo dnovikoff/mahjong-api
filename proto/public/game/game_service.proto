@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package mahjong.game;
+
+import "public/game/client.proto";
+import "public/game/server.proto";
+
+option go_package = "github.com/dnovikoff/mahjong-api/genproto/public/game";
+
+service GameService {
+    // Use tokens, gained in Create to auth Play via "token" header
+    rpc Connect(stream game.Client) returns (stream game.Server) {}
+}

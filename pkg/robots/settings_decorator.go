@@ -3,46 +3,46 @@ package robots
 import (
 	"github.com/golang/protobuf/proto"
 
-	proto_api "github.com/dnovikoff/mahjong-api/genproto/api"
+	proto_game "github.com/dnovikoff/mahjong-api/genproto/public/game"
 )
 
-func DefaultSettings() *proto_api.Settings {
-	return &proto_api.Settings{
+func DefaultSettings() *proto_game.Settings {
+	return &proto_game.Settings{
 		AutoTempai:  true,
 		AutoEndGame: true,
 	}
 }
 
-type SuggestFunc func(*proto_api.Suggest)
+type SuggestFunc func(*proto_game.Suggest)
 
-func NoChi(s *proto_api.Suggest) {
+func NoChi(s *proto_game.Suggest) {
 	NoLeft(s)
 	NoRight(s)
 	NoCenter(s)
 }
 
-func NoLeft(s *proto_api.Suggest) {
+func NoLeft(s *proto_game.Suggest) {
 	s.ChiLeft = false
 }
 
-func NoRight(s *proto_api.Suggest) {
+func NoRight(s *proto_game.Suggest) {
 	s.ChiRight = false
 }
 
-func NoCenter(s *proto_api.Suggest) {
+func NoCenter(s *proto_game.Suggest) {
 	s.ChiCenter = false
 }
 
-func NoPon(s *proto_api.Suggest) {
+func NoPon(s *proto_game.Suggest) {
 	s.Pon = false
 }
 
-func NoKan(s *proto_api.Suggest) {
+func NoKan(s *proto_game.Suggest) {
 	s.Kan = false
 }
 
 type Settings struct {
-	proto_api.Settings
+	proto_game.Settings
 	Remove []SuggestFunc
 }
 
@@ -57,11 +57,11 @@ func NewSettingsDecorator(c Robot, f ...SuggestFunc) *SettingsDecorator {
 	return &SettingsDecorator{c, Settings{Remove: f}}
 }
 
-func (d *SettingsDecorator) Update(x *proto_api.Settings) {
+func (d *SettingsDecorator) Update(x *proto_game.Settings) {
 	d.Settings.Settings = *x
 }
 
-func ApplySettings(req *proto_api.Server, settings *proto_api.Settings) *proto_api.Client {
+func ApplySettings(req *proto_game.Server, settings *proto_game.Settings) *proto_game.Client {
 	x := applySettings(req, settings)
 	if x != nil {
 		x.SuggestId = req.GetSuggest().GetSuggestId()
@@ -69,27 +69,27 @@ func ApplySettings(req *proto_api.Server, settings *proto_api.Settings) *proto_a
 	return x
 }
 
-func applySettings(req *proto_api.Server, settings *proto_api.Settings) *proto_api.Client {
+func applySettings(req *proto_game.Server, settings *proto_game.Settings) *proto_game.Client {
 	if req.Suggest == nil {
 		return nil
 	}
 	s := req.GetSuggest()
 	switch {
 	case settings.GetAutoWin() && s.GetWin():
-		return &proto_api.Client{
-			OneofClient: &proto_api.Client_Win{true},
+		return &proto_game.Client{
+			OneofClient: &proto_game.Client_Win{true},
 		}
 	case settings.GetDropTsumo() && s.GetDropMask() != 0,
 		settings.GetAutoTempai() && s.GetNoten(),
 		settings.GetAutoEndGame() && s.GetContinueGame():
-		return &proto_api.Client{
-			OneofClient: &proto_api.Client_Cancel{true},
+		return &proto_game.Client{
+			OneofClient: &proto_game.Client_Cancel{true},
 		}
 	}
 	return nil
 }
 
-func (d *SettingsDecorator) Request(req *proto_api.Server) *proto_api.Client {
+func (d *SettingsDecorator) Request(req *proto_game.Server) *proto_game.Client {
 	if req.Suggest == nil || req.GetSuggest().GetCanceled() {
 		return d.Robot.Request(req)
 	}
@@ -98,7 +98,7 @@ func (d *SettingsDecorator) Request(req *proto_api.Server) *proto_api.Client {
 		d.Robot.Request(req)
 		return applyResult
 	}
-	cReq := proto.Clone(req).(*proto_api.Server)
+	cReq := proto.Clone(req).(*proto_game.Server)
 	for _, v := range d.Settings.Remove {
 		v(cReq.Suggest)
 	}

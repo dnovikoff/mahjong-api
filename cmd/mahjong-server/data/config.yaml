@@ -1,0 +1,14 @@
+# example config
+
+network: tcp
+address: ":9090"
+logger-enabled: true
+
+secret: "game-secret"
+# Connect does not require secret
+secret-whitelist: ["/mahjong.game.GameService/Connect"]
+
+logs:
+  address: ":9091"
+  secret: "logs-secret"
+  insecure: true

@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package mahjong.private.log;
+
+import "google/protobuf/timestamp.proto";
+
+import "private/game/game_service.proto";
+import "public/game/client.proto";
+import "public/game/server.proto";
+import "public/log/log.proto";
+
+option go_package = "github.com/dnovikoff/mahjong-api/genproto/private/log";
+
+// Format for storing logs. (Private usage)
+message DebugLog {
+    google.protobuf.Timestamp created_at = 1;
+    // Storing information of created request
+    private.game.CreateRequest create = 2;
+    // Debug information for investigations
+    repeated DebugMessages player_messages = 3;
+}
+
+message DebugMessages {
+    repeated DebugMessage messages = 1;
+}
+
+enum MessageSource {
+    SOURCE_TYPE_UNSPECIFIED = 0;
+    // Message produced by robot, replacing the offline player.
+    SOURCE_ROBOT = 1;
+    // Message resulted by settings on server side. Ex. AutoWin
+    SOURCE_SETTINGS = 2;
+    // Message produced by players action.
+    SOURCE_CLIENT = 3;
+    // Message produced by timeout on server side.
+    SOURCE_TIMEOUT = 4;
+}
+
+message DebugMessage {
+    google.protobuf.Timestamp time = 1;
+    oneof oneof_events {
+        mahjong.game.Client client = 2;
+        mahjong.game.Server server = 3;
+    }
+    MessageSource source = 4;
+}

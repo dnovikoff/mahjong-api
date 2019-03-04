@@ -1,7 +1,7 @@
 package rules
 
 import (
-	proto_rules "github.com/dnovikoff/mahjong-api/genproto/rules"
+	proto_rules "github.com/dnovikoff/mahjong-api/genproto/public/rules"
 	"github.com/dnovikoff/mahjong-api/pkg/convert"
 	"github.com/dnovikoff/tempai-core/score"
 	"github.com/dnovikoff/tempai-core/tile"

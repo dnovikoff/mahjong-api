@@ -1,9 +1,9 @@
 package robots
 
 import (
-	proto_api "github.com/dnovikoff/mahjong-api/genproto/api"
+	proto_game "github.com/dnovikoff/mahjong-api/genproto/public/game"
 )
 
 type Robot interface {
-	Request(*proto_api.Server) *proto_api.Client
+	Request(*proto_game.Server) *proto_game.Client
 }
