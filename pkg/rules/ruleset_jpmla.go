@@ -1,8 +1,8 @@
 package rules
 
 import (
-	proto_base "github.com/dnovikoff/mahjong-api/genproto/base"
-	proto_rules "github.com/dnovikoff/mahjong-api/genproto/rules"
+	proto_base "github.com/dnovikoff/mahjong-api/genproto/public/base"
+	proto_rules "github.com/dnovikoff/mahjong-api/genproto/public/rules"
 )
 
 func JPMLA() *proto_rules.Ruleset {

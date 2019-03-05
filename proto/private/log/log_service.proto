@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package mahjong.private.log;
+
+import "private/log/debug.proto";
+import "public/log/log.proto";
+
+option go_package = "github.com/dnovikoff/mahjong-api/genproto/private/log";
+
+// LogService used by game to store logs
+service LogService {
+    rpc GetDebugLog(GetDebugLogRequest) returns (GetDebugLogResponse);
+    rpc SaveLog(SaveLogRequest) returns (SaveLogResponse);
+}
+
+message GetDebugLogRequest {
+    string log_id = 1;
+}
+
+message GetDebugLogResponse {
+    log.DebugLog debug = 1;
+}
+
+message SaveLogRequest {
+    mahjong.log.Log log = 1;
+    log.DebugLog  debug = 2;
+}
+
+message SaveLogResponse {
+}

@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	proto_api "github.com/dnovikoff/mahjong-api/genproto/api"
-	proto_log "github.com/dnovikoff/mahjong-api/genproto/log"
+	proto_game "github.com/dnovikoff/mahjong-api/genproto/public/game"
+	proto_log "github.com/dnovikoff/mahjong-api/genproto/public/log"
 	"github.com/dnovikoff/mahjong-api/pkg/convert"
 )
 
@@ -21,8 +21,8 @@ func TestCaller(t *testing.T) {
 	require.NoError(t, err)
 	d.Hand = tiles
 
-	req := &proto_api.Server{
-		OneofEvents: &proto_api.Server_Drop{
+	req := &proto_game.Server{
+		OneofEvents: &proto_game.Server_Drop{
 			&proto_log.DropEvent{
 				WhoIndex: 1,
 				Instance: convert.ProtoInstance(tg.Instance(tile.Pin7)),
@@ -64,8 +64,8 @@ func TestCallerDecoration(t *testing.T) {
 	require.NoError(t, err)
 	caller.Hand = tiles
 
-	req := &proto_api.Server{
-		OneofEvents: &proto_api.Server_Drop{
+	req := &proto_game.Server{
+		OneofEvents: &proto_game.Server_Drop{
 			&proto_log.DropEvent{
 				WhoIndex: 1,
 				Instance: convert.ProtoInstance(tg.Instance(tile.Pin7)),
@@ -81,34 +81,34 @@ func TestCallerDecoration(t *testing.T) {
 	assert.Nil(t, callerTest(t, dec, req, opts...))
 }
 
-func chi(s *proto_api.Suggest) {
+func chi(s *proto_game.Suggest) {
 	left(s)
 	right(s)
 	center(s)
 }
 
-func left(s *proto_api.Suggest) {
+func left(s *proto_game.Suggest) {
 	s.ChiLeft = true
 }
 
-func right(s *proto_api.Suggest) {
+func right(s *proto_game.Suggest) {
 	s.ChiRight = true
 }
 
-func center(s *proto_api.Suggest) {
+func center(s *proto_game.Suggest) {
 	s.ChiCenter = true
 }
 
-func pon(s *proto_api.Suggest) {
+func pon(s *proto_game.Suggest) {
 	s.Pon = true
 }
 
-func kan(s *proto_api.Suggest) {
+func kan(s *proto_game.Suggest) {
 	s.Kan = true
 }
 
-func callerTest(t *testing.T, c Robot, req *proto_api.Server, opts ...SuggestFunc) tile.Instances {
-	req.Suggest = &proto_api.Suggest{
+func callerTest(t *testing.T, c Robot, req *proto_game.Server, opts ...SuggestFunc) tile.Instances {
+	req.Suggest = &proto_game.Suggest{
 		SuggestId: 1,
 	}
 	for _, v := range opts {

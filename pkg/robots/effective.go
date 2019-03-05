@@ -5,7 +5,7 @@ import (
 	"github.com/dnovikoff/tempai-core/hand/effective"
 	"github.com/dnovikoff/tempai-core/tile"
 
-	proto_api "github.com/dnovikoff/mahjong-api/genproto/api"
+	proto_game "github.com/dnovikoff/mahjong-api/genproto/public/game"
 	"github.com/dnovikoff/mahjong-api/pkg/convert"
 )
 
@@ -20,7 +20,7 @@ func NewEffective() *Effective {
 	return &Effective{NewTracker()}
 }
 
-func (t *Effective) Request(req *proto_api.Server) *proto_api.Client {
+func (t *Effective) Request(req *proto_game.Server) *proto_game.Client {
 	// Note, that the tracker must be informed of every request.
 	// Still the result could be replace with any of yours.
 	r := t.Tracker.Request(req)
@@ -44,8 +44,8 @@ func (t *Effective) Request(req *proto_api.Server) *proto_api.Client {
 	if dm.IsEmpty() {
 		return r
 	}
-	r.OneofClient = &proto_api.Client_Drop{
-		&proto_api.ClientDrop{
+	r.OneofClient = &proto_game.Client_Drop{
+		&proto_game.ClientDrop{
 			Instance: convert.ProtoInstance(bestTile),
 			Riichi:   rm.Check(bestTile.Tile()),
 		},

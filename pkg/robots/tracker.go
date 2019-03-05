@@ -4,9 +4,9 @@ import (
 	"github.com/dnovikoff/tempai-core/compact"
 	"github.com/dnovikoff/tempai-core/tile"
 
-	proto_api "github.com/dnovikoff/mahjong-api/genproto/api"
-	proto_base "github.com/dnovikoff/mahjong-api/genproto/base"
-	proto_log "github.com/dnovikoff/mahjong-api/genproto/log"
+	proto_base "github.com/dnovikoff/mahjong-api/genproto/public/base"
+	proto_game "github.com/dnovikoff/mahjong-api/genproto/public/game"
+	proto_log "github.com/dnovikoff/mahjong-api/genproto/public/log"
 	"github.com/dnovikoff/mahjong-api/pkg/convert"
 )
 
@@ -29,7 +29,7 @@ func NewTracker() Tracker {
 	}
 }
 
-func (t *Tracker) Request(req *proto_api.Server) *proto_api.Client {
+func (t *Tracker) Request(req *proto_game.Server) *proto_game.Client {
 	if start := req.GetGameStart(); start != nil {
 		t.ClientIndex = start.ClientIndex
 	}
@@ -43,7 +43,7 @@ func (t *Tracker) Request(req *proto_api.Server) *proto_api.Client {
 	return x
 }
 
-func (t *Tracker) gameStart(e *proto_api.GameStartEvent) {
+func (t *Tracker) gameStart(e *proto_game.GameStartEvent) {
 	if e == nil {
 		return
 	}

@@ -1,0 +1,12 @@
+# example config
+
+network: tcp
+address: ":9091"
+logger-enabled: true
+
+secret: "logger-secret"
+# GetLog does not require secret
+secret-whitelist: ["/mahjong.log.LogService/GetLog"]
+
+# Run in memory mode
+output: ""

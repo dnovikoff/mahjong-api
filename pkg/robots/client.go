@@ -8,12 +8,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	proto_api "github.com/dnovikoff/mahjong-api/genproto/api"
+	proto_game "github.com/dnovikoff/mahjong-api/genproto/public/game"
 )
 
 type Client struct {
 	conn   *grpc.ClientConn
-	client proto_api.GameClient
+	client proto_game.GameServiceClient
 	robot  Robot
 }
 
@@ -21,7 +21,7 @@ func NewClient(conn *grpc.ClientConn, robot Robot) *Client {
 	x := &Client{
 		conn:   conn,
 		robot:  robot,
-		client: proto_api.NewGameClient(conn),
+		client: proto_game.NewGameServiceClient(conn),
 	}
 	return x
 }
@@ -35,7 +35,7 @@ func (c *Client) Run(ctx context.Context, token string) error {
 	pcontext := metadata.NewOutgoingContext(ctx, metadata.MD{
 		"token": []string{token},
 	})
-	stream, err := c.client.Play(pcontext)
+	stream, err := c.client.Connect(pcontext)
 	if err != nil {
 		return err
 	}
