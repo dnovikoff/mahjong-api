@@ -24,7 +24,7 @@ And run the server
 
 The code for `mahjong-server` is **private**. Take note, that the `mahjong-server` 
 is not allowed to be used as a part of **commercial/non-commercial**
-online mahjong server wihtout authors permission.
+online mahjong server without authors permission.
 Could be used for such scenarios as: **AI training**, **testing**, **research**.
 
 Please contact me or open an issue in case of found bugs in `mahjong-server` work.
