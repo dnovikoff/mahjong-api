@@ -1,6 +1,5 @@
 # mahjong-server
 
-Download server from here https://yadi.sk/d/f2e7KFl6cGe_Lw
-And use data/config.yaml
+No code here. The code is in private repo.
 
-Start the log server before run
+The compiled binary is here https://yadi.sk/d/f2e7KFl6cGe_Lw

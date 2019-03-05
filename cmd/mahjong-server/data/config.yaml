@@ -1,14 +1,18 @@
-# example config
-
 network: tcp
+# Address to start on
 address: ":9090"
+# Enable logs output to stdout
 logger-enabled: true
 
+# Protect from calling private methods without a correct secret header
 secret: "game-secret"
 # Connect does not require secret
 secret-whitelist: ["/mahjong.game.GameService/Connect"]
 
+# Description of logs backend. Could be removed (logs will be dev-nulled)
 logs:
   address: ":9091"
+  # Secret should be the same as in log-server config
   secret: "logs-secret"
+  # No TLS enabled
   insecure: true

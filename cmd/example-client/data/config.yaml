@@ -1,16 +1,28 @@
+# Description of server, to connect to
 public-game:
     address: ":9090"
     insecure: true
+
+# Description of server to create game on
 private-game:
     address: ":9090"
     insecure: true
+    # Should be same as described on mahjong-server config
     secret: "game-secret"
+
+# Description of server to get logs from
 public-logs:
     address: ":9091"
     insecure: true
+    # Should be the same as described on logs-server config
     secret: "logs-secret"
+
+# Description of server to get debug logs from
 private-logs:
     address: ":9091"
     insecure: true
+    # Should be the same as described on logs-server config
     secret: "logs-secret"
+
+# Prefix to output game files
 log-name: example

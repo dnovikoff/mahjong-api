@@ -1,12 +1,15 @@
-# example config
-
 network: tcp
+# Address to start log-server on
 address: ":9091"
+# Enable logs to stdout
 logger-enabled: true
+# Also save debug logs
+save-debug: true
 
-secret: "logger-secret"
+# Secret to be used by log-server users. (see mahjong-server config)
+secret: "logs-secret"
 # GetLog does not require secret
 secret-whitelist: ["/mahjong.log.LogService/GetLog"]
 
-# Run in memory mode
+# Run in memory mode. Save nothing on the disk.
 output: ""
