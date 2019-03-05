@@ -3,8 +3,8 @@ package rules
 import (
 	"github.com/dnovikoff/tempai-core/tile"
 
-	proto_base "github.com/dnovikoff/mahjong-api/genproto/base"
-	proto_rules "github.com/dnovikoff/mahjong-api/genproto/rules"
+	proto_base "github.com/dnovikoff/mahjong-api/genproto/public/base"
+	proto_rules "github.com/dnovikoff/mahjong-api/genproto/public/rules"
 )
 
 func Fishing() *proto_rules.Ruleset {

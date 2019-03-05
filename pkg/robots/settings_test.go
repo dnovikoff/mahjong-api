@@ -7,21 +7,21 @@ import (
 	"github.com/dnovikoff/tempai-core/tile"
 	"github.com/stretchr/testify/assert"
 
-	proto_api "github.com/dnovikoff/mahjong-api/genproto/api"
-	proto_log "github.com/dnovikoff/mahjong-api/genproto/log"
+	proto_game "github.com/dnovikoff/mahjong-api/genproto/public/game"
+	proto_log "github.com/dnovikoff/mahjong-api/genproto/public/log"
 	"github.com/dnovikoff/mahjong-api/pkg/convert"
 )
 
 func TestSettingsAutoWin(t *testing.T) {
 	d := NewSettingsDecorator(&Tsumo{})
-	req := &proto_api.Server{
-		OneofEvents: &proto_api.Server_Drop{
+	req := &proto_game.Server{
+		OneofEvents: &proto_game.Server_Drop{
 			&proto_log.DropEvent{
 				WhoIndex: 1,
 				Instance: convert.ProtoInstance(tile.Sou4.Instance(0)),
 			},
 		},
-		Suggest: &proto_api.Suggest{
+		Suggest: &proto_game.Suggest{
 			SuggestId: 1,
 			Win:       true,
 		},
@@ -36,14 +36,14 @@ func TestSettingsAutoWin(t *testing.T) {
 func TestSettingsZaichikDrop(t *testing.T) {
 	d := NewSettingsDecorator(&Zaichik{&Tsumo{}})
 
-	req := &proto_api.Server{
-		OneofEvents: &proto_api.Server_Drop{
+	req := &proto_game.Server{
+		OneofEvents: &proto_game.Server_Drop{
 			&proto_log.DropEvent{
 				WhoIndex: 1,
 				Instance: convert.ProtoInstance(tile.Sou4.Instance(0)),
 			},
 		},
-		Suggest: &proto_api.Suggest{
+		Suggest: &proto_game.Suggest{
 			SuggestId: 1,
 			Win:       true,
 			Kan:       true,
@@ -51,9 +51,9 @@ func TestSettingsZaichikDrop(t *testing.T) {
 	}
 
 	d.Settings.AutoWin = false
-	assert.Equal(t, &proto_api.Client{
+	assert.Equal(t, &proto_game.Client{
 		SuggestId: 1,
-		OneofClient: &proto_api.Client_Call{
+		OneofClient: &proto_game.Client_Call{
 			convert.ProtoInstances(tile.Instances{
 				tile.Sou4.Instance(1),
 				tile.Sou4.Instance(2),
@@ -66,9 +66,9 @@ func TestSettingsZaichikDrop(t *testing.T) {
 	d.Settings.Remove = []SuggestFunc{
 		NoKan, NoChi, NoPon,
 	}
-	assert.Equal(t, &proto_api.Client{
+	assert.Equal(t, &proto_game.Client{
 		SuggestId: 1,
-		OneofClient: &proto_api.Client_Cancel{
+		OneofClient: &proto_game.Client_Cancel{
 			true,
 		},
 	}, d.Request(req))
@@ -77,14 +77,14 @@ func TestSettingsZaichikDrop(t *testing.T) {
 func TestSettingsZaichikTake(t *testing.T) {
 	d := NewSettingsDecorator(&Zaichik{&Tsumo{}})
 
-	req := &proto_api.Server{
-		OneofEvents: &proto_api.Server_Take{
+	req := &proto_game.Server{
+		OneofEvents: &proto_game.Server_Take{
 			&proto_log.TakeEvent{
 				WhoIndex: 1,
 				Instance: convert.ProtoInstance(tile.Sou4.Instance(0)),
 			},
 		},
-		Suggest: &proto_api.Suggest{
+		Suggest: &proto_game.Suggest{
 			SuggestId:     1,
 			DropMask:      convert.ProtoMask(compact.AllTiles),
 			ClosedKanMask: convert.ProtoMask(compact.Tiles(0).Set(tile.Man2).Set(tile.Red)),

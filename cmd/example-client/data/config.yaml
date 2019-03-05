@@ -1,0 +1,16 @@
+public-game:
+    address: ":9090"
+    insecure: true
+private-game:
+    address: ":9090"
+    insecure: true
+    secret: "game-secret"
+public-logs:
+    address: ":9091"
+    insecure: true
+    secret: "logs-secret"
+private-logs:
+    address: ":9091"
+    insecure: true
+    secret: "logs-secret"
+log-name: example
