@@ -7,7 +7,6 @@ import "google/protobuf/timestamp.proto";
 import "private/game/game_service.proto";
 import "public/game/client.proto";
 import "public/game/server.proto";
-import "public/log/log.proto";
 
 option go_package = "github.com/dnovikoff/mahjong-api/genproto/private/log";
 
