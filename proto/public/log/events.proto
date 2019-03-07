@@ -94,27 +94,6 @@ message DeclareEvent {
     base.Meld meld = 2;
 }
 
-message Win {
-    int64 who_index = 1;
-    // Hand with no win tile
-    base.Instances hand = 2;
-    repeated base.Meld declared = 3;
-    base.Limit limit = 4;
-    // Base money played to player.
-    // Does not includes riichi sticks and renchans.
-    // Ex. for Ron 4.30 it will be 7700 and for Tsumo 4.30 it will be 7900
-    // Resulting money could be taken from changes
-    int64 base_money = 5;
-
-    oneof oneof_win_info {
-        YakuInfo yaku = 6;
-        YakumanInfo yakuman = 7;
-    }
-
-    // Changes after current win applied
-    Changes changes = 8;
-}
-
 message YakuInfo {
     int64 han = 1;
     int64 fu = 2;
@@ -127,16 +106,24 @@ message YakumanInfo {
 
 message WinEvent {
     // If from == who - this is tsumo
+    int64 who_index = 1;
     int64 from_index = 2;
+
     int64 instance = 3;
-    base.Instances dora_indicators = 4;
-    base.Instances ura_indicators = 5;
+    base.Instances hand = 4;
+    repeated base.Meld declared = 5;
 
-    // Total changes after all payments applied
-    Changes changes = 6;
+    base.Instances dora_indicators = 6;
+    base.Instances ura_indicators = 7;
+    
+    base.Limit limit = 8;
+    oneof oneof_win_info {
+        YakuInfo yaku = 9;
+        YakumanInfo yakuman = 10;
+    }
 
-    // Ron, Tsumo, Multiron
-    repeated Win wins = 7;
+    int64 base_money = 11;
+    Changes changes = 12;
 }
 
 enum DrawReason {
