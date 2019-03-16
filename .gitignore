@@ -2,3 +2,6 @@
 /logdb
 .vscode
 .DS_Store
+
+.idea
+mahjong-server
