@@ -1,0 +1,31 @@
+version: '3'
+services:
+  mapi-logs:
+    build:
+      context: .
+      dockerfile: ./cmd/log-server/dockerfile
+    stop_signal: SIGINT
+    expose:
+    - 9091
+    volumes:
+    - ./logdb:/logdb:rw
+    - ./compose/logs.yaml:/config.yaml:ro
+  mapi-game:
+    links:
+    - mapi-logs
+    depends_on:
+    - mapi-logs
+    image: tempai/mahjong-server:latest
+    stop_signal: SIGINT
+    expose:
+    - 9090
+    volumes:
+    - ./compose/game.yaml:/etc/mahjong-server/config.yaml:ro
+  example:
+    build:
+      context: .
+      dockerfile: ./cmd/example-client/dockerfile
+    links:
+    - mapi-game
+    volumes:
+    - ./compose/example.yaml:/config.yaml:ro

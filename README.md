@@ -33,3 +33,6 @@ Please contact me or open an issue in case of found bugs in `mahjong-server` wor
 `go run ./cmd/example-client --config ./cmd/example-client/data/config.yaml`
 
 The client will run a game with a bot and report a log to the `log-server`
+
+# Alternative run with docker-compose
+`docker-compose up --abort-on-container-exit`

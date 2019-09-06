@@ -1,0 +1,22 @@
+network: tcp
+# Address to start log-server on
+address: ":9091"
+# Enable logs to stdout
+logger-enabled: true
+# Also save debug logs
+save-debug: true
+# Also save human-readable json logs.
+# Only have meaning if you want to review the results.
+save-json: true
+
+# Secret to be used by log-server users. (see mahjong-server config)
+secret: "logs-secret"
+# GetLog does not require secret
+secret-whitelist: ["/mahjong.log.LogService/GetLog"]
+
+# This is where logs will be stored
+# If empty - will start in memory-only mode
+output: /logdb/
+# Regexp to check the log id
+# Remove for no validation
+validate-id-regexp: "^[-/a-z-A-Z0-9]+$"
