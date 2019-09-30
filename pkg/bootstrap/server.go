@@ -3,11 +3,7 @@ package bootstrap
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
-	"os"
-	"os/signal"
-	"syscall"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -61,24 +57,6 @@ func RunForConfig(ctx context.Context, cfg Config, init func(*InitData) error) e
 	err = s.Serve(listener)
 	logger.Info("Server stopped")
 	return err
-}
-
-// Signals returns context, waiting for for signal
-func Signals(ctx context.Context) context.Context {
-	ctx, cancel := context.WithCancel(ctx)
-	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, syscall.SIGINT)
-	go func() {
-		defer signal.Reset()
-		select {
-		case sig := <-sigs:
-			log.Printf("Signal received: %s\n", sig)
-			cancel()
-		case <-ctx.Done():
-			log.Println("Context done")
-		}
-	}()
-	return ctx
 }
 
 func newLogger(cfg Config) (*zap.Logger, error) {
