@@ -1,20 +1,19 @@
+include protoc.mk
 
 gobin:
 	mkdir gobin
 
-gobin/protoc-gen-go: gobin
-	go build -o ./gobin/protoc-gen-go ./vendor/github.com/golang/protobuf/protoc-gen-go
-
 gobin/example-client: gobin
-	go build -o ./gobin/example-client ./cmd/example-client
+	go build -mod vendor -o ./gobin/example-client ./cmd/example-client
+
 gobin/log-server: gobin
-	go build -o ./gobin/log-server ./cmd/log-server
+	go build -mod vendor -o ./gobin/log-server ./cmd/log-server
 
 .PHONY: binaries
 binaries: gobin/protoc-gen-go gobin/example-client gobin/log-server
 
 # github.com/golang/protobuf/protoc-gen-go
-CMD := protoc --plugin=protoc-gen-go=./gobin/protoc-gen-go --go_out=paths=source_relative,plugins=grpc:./genproto --proto_path=./proto
+CMD := $(protoc_go_cmd) --go_out=paths=source_relative,plugins=grpc:./genproto --proto_path=./proto
 
 .PHONY: rmgenerate
 rmgenerate: 
@@ -24,13 +23,13 @@ rmgenerate:
 regenerate: rmgenerate generate
 
 .PHONY: generate
-generate: gobin/protoc-gen-go
+generate: $(protoc_gen_go)
 	mkdir -p genproto
 	find ./proto -name *.proto | xargs -n1 $(CMD)
 
 .PHONY: test
 test:
-	go test ./pkg/...
+	go test -mod vendor ./pkg/...
 
 .PHONY: format
 format:

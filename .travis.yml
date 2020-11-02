@@ -1,7 +1,10 @@
 language: go
 
+variables:
+  GOPROXY: "off"
+
 go:
-  - "1.10.x" # must be quoted in order to work correctly
+  - "1.15.x" # must be quoted in order to work correctly
   - master
 
 before_install:
