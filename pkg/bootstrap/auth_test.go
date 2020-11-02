@@ -77,7 +77,8 @@ func TestAuth(t *testing.T) {
 				}
 				resp, err := c.GetDebugLog(ctx, &private_log.GetDebugLogRequest{})
 				if v.err != nil {
-					require.Equal(t, v.err, err)
+					require.Error(t, err)
+					require.Equal(t, v.err.Error(), err.Error())
 					require.Nil(t, resp)
 				} else {
 					require.NoError(t, err)
