@@ -1,6 +1,6 @@
 # mahjong-api
 
-[![Build Status](https://travis-ci.org/dnovikoff/mahjong-api.svg?branch=master)](https://travis-ci.org/dnovikoff/mahjong-api)
+[![CI](https://github.com/dnovikoff/mahjong-api/workflows/CI/badge.svg?branch=master&event=push)](https://github.com/dnovikoff/mahjong-api/actions?query=workflow%3ACI)
 [![Coverage Status](https://img.shields.io/codecov/c/github/dnovikoff/mahjong-api.svg)](https://codecov.io/gh/dnovikoff/mahjong-api)
 [![Go Report Card](https://goreportcard.com/badge/github.com/dnovikoff/mahjong-api)](https://goreportcard.com/report/github.com/dnovikoff/mahjong-api)
 

@@ -1,16 +1,19 @@
+.PHONY: all
+all: binaries test
+
 include protoc.mk
 
 gobin:
 	mkdir gobin
 
 gobin/example-client: gobin
-	go build -mod vendor -o ./gobin/example-client ./cmd/example-client
+	go build -mod vendor -o $@ ./cmd/example-client
 
 gobin/log-server: gobin
-	go build -mod vendor -o ./gobin/log-server ./cmd/log-server
+	go build -mod vendor -o $@ ./cmd/log-server
 
 .PHONY: binaries
-binaries: gobin/protoc-gen-go gobin/example-client gobin/log-server
+binaries: gobin/example-client gobin/log-server
 
 # github.com/golang/protobuf/protoc-gen-go
 CMD := $(protoc_go_cmd) --go_out=paths=source_relative,plugins=grpc:./genproto --proto_path=./proto
@@ -30,6 +33,10 @@ generate: $(protoc_gen_go)
 .PHONY: test
 test:
 	go test -mod vendor ./pkg/...
+
+.PHONY: testcover
+testcover:
+	go test -mod vendor -race -coverprofile=coverage.txt -covermode=atomic ./pkg/... ./cmd/...
 
 .PHONY: format
 format:

@@ -1,0 +1,50 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.15
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.15
+
+      - name: Check out source code
+        uses: actions/checkout@v1
+
+      - name: Generate
+        env:
+            GOPROXY: "off"
+        run: make regenerate
+
+      - name: Build
+        env:
+            GOPROXY: "off"
+        run: make binaries
+
+      - name: Test
+        env:
+            GOPROXY: "off"
+        run: make testcover
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.txt
+          fail_ci_if_error: true
+          verbose: false
+
+      - name: Check log-server dockerfile
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./cmd/log-server/dockerfile
+          push: false
+
+      - name: Check example-client dockerfile
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./cmd/example-client/dockerfile
+          push: false
