@@ -1,7 +1,8 @@
 # github.com/davecgh/go-spew v1.1.1
+## explicit
 github.com/davecgh/go-spew/spew
 # github.com/dnovikoff/tempai-core v0.0.0-20201102152242-80e66cf333ab
-## explicit
+## explicit; go 1.15
 github.com/dnovikoff/tempai-core/base
 github.com/dnovikoff/tempai-core/compact
 github.com/dnovikoff/tempai-core/hand/calc
@@ -12,11 +13,13 @@ github.com/dnovikoff/tempai-core/score
 github.com/dnovikoff/tempai-core/tile
 github.com/dnovikoff/tempai-core/yaku
 # github.com/facebookgo/stack v0.0.0-20160209184415-751773369052
+## explicit
 github.com/facebookgo/stack
 # github.com/facebookgo/stackerr v0.0.0-20150612192056-c2fcf88613f4
+## explicit
 github.com/facebookgo/stackerr
 # github.com/golang/protobuf v1.5.2
-## explicit
+## explicit; go 1.9
 github.com/golang/protobuf/internal/gengogrpc
 github.com/golang/protobuf/jsonpb
 github.com/golang/protobuf/proto
@@ -27,22 +30,23 @@ github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 github.com/golang/protobuf/ptypes/wrappers
 # github.com/mitchellh/mapstructure v1.5.0
-## explicit
+## explicit; go 1.14
 github.com/mitchellh/mapstructure
 # github.com/pmezard/go-difflib v1.0.0
+## explicit
 github.com/pmezard/go-difflib/difflib
 # github.com/stretchr/testify v1.8.2
-## explicit
+## explicit; go 1.13
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
 # go.uber.org/atomic v1.10.0
-## explicit
+## explicit; go 1.18
 go.uber.org/atomic
 # go.uber.org/multierr v1.9.0
-## explicit
+## explicit; go 1.19
 go.uber.org/multierr
 # go.uber.org/zap v1.24.0
-## explicit
+## explicit; go 1.19
 go.uber.org/zap
 go.uber.org/zap/buffer
 go.uber.org/zap/internal
@@ -51,6 +55,7 @@ go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
 # golang.org/x/net v0.7.0
+## explicit; go 1.17
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
@@ -58,17 +63,19 @@ golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
 # golang.org/x/sys v0.5.0
+## explicit; go 1.17
 golang.org/x/sys/unix
 # golang.org/x/text v0.7.0
+## explicit; go 1.17
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 # google.golang.org/genproto v0.0.0-20230301171018-9ab4bdc49ad5
-## explicit
+## explicit; go 1.19
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.53.0
-## explicit
+## explicit; go 1.17
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
@@ -118,7 +125,7 @@ google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
 # google.golang.org/protobuf v1.28.1
-## explicit
+## explicit; go 1.11
 google.golang.org/protobuf/cmd/protoc-gen-go/internal_gengo
 google.golang.org/protobuf/compiler/protogen
 google.golang.org/protobuf/encoding/protojson
@@ -156,7 +163,8 @@ google.golang.org/protobuf/types/known/timestamppb
 google.golang.org/protobuf/types/known/wrapperspb
 google.golang.org/protobuf/types/pluginpb
 # gopkg.in/yaml.v2 v2.4.0
-## explicit
+## explicit; go 1.15
 gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.1
+## explicit
 gopkg.in/yaml.v3
